@@ -5,6 +5,7 @@ const { userGet,
         userPost, 
         userDelete, 
         userPatch } = require('../controllers/user');
+const { validateFields } = require('../middlewares/validate-fields');
 
 const router = Router();
 
@@ -13,7 +14,11 @@ router.get( '/', userGet );
 router.put( '/:id', userPut );
 
 router.post( '/', [
-  check('email', 'El correo no es válido').isEmail(),
+  check('name', 'Name is required').not().isEmpty(),
+  check('password', 'Password must be al least 6 characters').isLength({ min: 6}),
+  check('email', 'Email is invalid').isEmail(),
+  check('role', 'Role is invalid').isIn(['ADMIN_ROLE', 'USER_ROLE']),
+  validateFields,
 ], userPost );
 
 router.delete( '/', userDelete );
