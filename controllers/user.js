@@ -24,20 +24,15 @@ const userPut = async(req, res = response) => {
   const { id } = req.params;
   const { _id, password, google, email, ...rest } = req.body;
 
-  // TODO: validar contra DB
+  // TODO: validar email contra DB
   if( password ){
     // Encriptar la contraseña
     const salt = bcryptjs.genSaltSync();
     rest.password = bcryptjs.hashSync( password, salt );
   }
 
-  const user = await User.findByIdAndUpdate(id, rest);
-
-  res.status(201).json({
-    ok: true,
-    msg: 'put API - controller',
-    user
-  });
+  const user = await User.findByIdAndUpdate(id, rest, {new: true});
+  res.status(201).json(user);
 };
 
 const userPost = async(req = request, res = response) => {
@@ -53,11 +48,7 @@ const userPost = async(req = request, res = response) => {
 
   await user.save();
 
-  res.status(201).json({
-    ok: true,
-    msg: 'post API - controller',
-    user
-  });
+  res.status(201).json(user);
 };
 
 const userDelete = (req, res = response) => {
