@@ -4,18 +4,21 @@ const bcryptjs = require('bcryptjs');
 const User = require('../models/user');
 // const { existEmail } = require('../helpers/db-validators');
 
-const userGet = (req = request, res = response) => {
+const userGet = async(req = request, res = response) => {
 
-  const { q, name = 'No name', apikey, page = 1, limit } = req.query;
+  const { limit = 5, desde = 0 } = req.query;
+  const query = { state: true };
+
+  const [ total, users ] = await Promise.all([
+    User.countDocuments(query),
+    User.find(query)
+    .skip(Number(desde))
+    .limit(Number(limit))
+  ]);
 
   res.status(200).json({
-    ok: true,
-    msg: 'get API - controller',
-    q,
-    name,
-    apikey,
-    page,
-    limit
+    total,
+    users
   });
 };
 
