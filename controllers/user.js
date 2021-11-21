@@ -22,7 +22,7 @@ const userGet = async(req = request, res = response) => {
   });
 };
 
-const userPut = async(req, res = response) => {
+const userPut = async(req = request, res = response) => {
 
   const { id } = req.params;
   const { _id, password, google, email, ...rest } = req.body;
@@ -54,14 +54,21 @@ const userPost = async(req = request, res = response) => {
   res.status(201).json(user);
 };
 
-const userDelete = (req, res = response) => {
+const userDelete = async(req = request, res = response) => {
+  
+  const { id } = req.params;
+
+  // Borrar físicamente
+  // const user = await User.findByIdAndDelete( id );
+
+  const user = await User.findByIdAndUpdate(id, {state: false}, {new: true});
+
   res.status(200).json({
-    ok: true,
-    msg: 'delete API - controller'
+    user
   });
 };
 
-const userPatch = (req, res = response) => {
+const userPatch = (req = request, res = response) => {
   res.json({
     ok: true,
     msg: 'patch API - controller'
