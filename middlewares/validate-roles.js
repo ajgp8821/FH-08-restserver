@@ -32,7 +32,7 @@ const hasRole = ( ...rest ) => {
 
     if ( !rest.includes( req.user.role ) ) {
       return res.status(401).json({
-        msg: `El servicio requiere uno de estos roles ${rest}`
+        msg: `The service requires one of these roles ${rest}`
       });
     }
 
